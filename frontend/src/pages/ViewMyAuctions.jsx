@@ -21,9 +21,9 @@ const ViewMyAuctions = () => {
 
   return (
     <>
-      <div className="w-full ml-0 m-0 h-fit px-5 pt-20 lg:pl-[320px] flex flex-col">
+      <div className="w-full ml-0 m-0 h-fit px-5 pt-20 lg:pl-[320px] flex flex-col bg-white dark:bg-gray-900 min-h-screen">
         <h1
-          className={`text-[#d6482b] text-2xl font-bold mb-2 min-[480px]:text-4xl md:text-6xl xl:text-7xl 2xl:text-8xl`}
+          className={`text-[#d6482b] dark:text-[#d6482b] text-2xl font-bold mb-8 min-[480px]:text-4xl md:text-6xl xl:text-7xl 2xl:text-8xl`}
         >
           My Auctions
         </h1>
@@ -32,7 +32,7 @@ const ViewMyAuctions = () => {
         ) : (
           <div
             className={`${
-              myAuctions.length > 2 && "flex-grow"
+              myAuctions.length > 2 ? "flex-grow" : ""
             } flex flex-wrap gap-6`}
           >
             {myAuctions.length > 0 ? (
@@ -50,11 +50,10 @@ const ViewMyAuctions = () => {
                 );
               })
             ) : (
-              <h3 className="text-[#666] text-xl font-semibold mb-2 min-[480px]:text-xl md:text-2xl lg:text-3xl mt-5">
+              <h3 className="text-[#666] dark:text-gray-400 text-xl font-semibold mb-2 min-[480px]:text-xl md:text-2xl lg:text-3xl mt-5">
                 You have not posted any auction.
               </h3>
-            )}{" "}
-            :
+            )}
           </div>
         )}
       </div>

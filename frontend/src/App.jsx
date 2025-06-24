@@ -21,6 +21,7 @@ import ViewAuctionDetails from "./pages/ViewAuctionDetails";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Contact from "./pages/Contact";
 import UserProfile from "./pages/UserProfile";
+import ThemeToggle from "./custom-components/ThemeToggle";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const App = () => {
   }, []);
   return (
     <Router>
+      <ThemeToggle />
       <SideDrawer />
       <Routes>
         <Route path="/" element={<Home />} />

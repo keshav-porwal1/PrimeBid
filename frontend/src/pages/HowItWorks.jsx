@@ -50,33 +50,30 @@ const HowItWorks = () => {
 
   return (
     <>
-      <section className="w-full ml-0 m-0 h-fit px-5 pt-20 lg:pl-[320px] flex flex-col min-h-screen py-4 justify-center">
-        <h1
-          className={`text-[#d6482b] text-2xl font-bold mb-2 min-[480px]:text-4xl md:text-6xl xl:text-7xl 2xl:text-8xl`}
-        >
+      <section className="w-full ml-0 m-0 h-fit px-5 pt-20 lg:pl-[320px] flex flex-col min-h-screen py-4 justify-center bg-white dark:bg-gray-900">
+        <h1 className="text-[#d6482b] dark:text-[#f87171] text-2xl font-bold mb-2 min-[480px]:text-4xl md:text-6xl xl:text-7xl 2xl:text-8xl">
           Discover How PrimeBid Operates
         </h1>
         <div className="flex flex-col gap-4 my-5">
-          {steps.map((element, index) => {
-            return (
+          {steps.map((element, index) => (
+            <div
+              key={index}
+              className="bg-white dark:bg-gray-800 rounded-xl p-5 flex flex-col gap-2 group transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_20px_rgba(253,186,116,0.4)] dark:hover:shadow-[0_0_20px_rgba(253,186,116,0.3)]"
+            >
               <div
-                key={index}
-                className="bg-white rounded-md p-2 lg:p-5 flex flex-col gap-2 group hover:bg-black transition-all duration-300"
+                aria-hidden="true"
+                className="bg-black dark:bg-gray-900 text-white p-3 text-xl rounded-full w-fit transition-all duration-300"
               >
-                <div className="bg-black text-white p-3 text-xl rounded-full w-fit group-hover:bg-[#d6482b] transition-all duration-300">
-                  {element.icon}
-                </div>
-                <h3
-                  className={`text-[#D6482B] text-xl font-semibold mb-2 min-[480px]:text-xl md:text-2xl lg:text-3xl`}
-                >
-                  {element.title}
-                </h3>
-                <p className="text-xl text-stone-700 group-hover:text-[#fff] transition-all duration-300">
-                  {element.description}
-                </p>
+                {element.icon}
               </div>
-            );
-          })}
+              <h3 className="text-[#D6482B] dark:text-[#f87171] text-xl font-semibold mb-2 min-[480px]:text-xl md:text-2xl lg:text-3xl group-hover:text-[#fbbf24] dark:group-hover:text-yellow-300 transition-all duration-300">
+                {element.title}
+              </h3>
+              <p className="text-xl text-stone-700 dark:text-stone-300 transition-all duration-300">
+                {element.description}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
     </>

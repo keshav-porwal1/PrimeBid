@@ -3,6 +3,16 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: white;
+  color: black;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+@media (prefers-color-scheme: dark) {
+  #root {
+    background-color: #121212;
+    color: #eee;
+  }
 }
 
 .logo {
@@ -11,11 +21,23 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
+/* Normal mode filters */
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+/* Dark mode filter overrides */
+@media (prefers-color-scheme: dark) {
+  .logo:hover {
+    filter: drop-shadow(0 0 2em #a0a0ffcc);
+  }
+  .logo.react:hover {
+    filter: drop-shadow(0 0 2em #99ccffcc);
+  }
 }
 
 @keyframes logo-spin {
@@ -35,8 +57,23 @@
 
 .card {
   padding: 2em;
+  background-color: white;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    background-color: #1e1e1e;
+  }
 }
 
 .read-the-docs {
   color: #888;
+}
+
+@media (prefers-color-scheme: dark) {
+  .read-the-docs {
+    color: #bbb;
+  }
 }

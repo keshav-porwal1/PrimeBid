@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,6 +28,20 @@ const BiddersAuctioneersGraph = () => {
   const { totalAuctioneers, totalBidders } = useSelector(
     (state) => state.superAdmin
   );
+
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   const data = {
     labels: [
       "January",
@@ -60,26 +74,50 @@ const BiddersAuctioneersGraph = () => {
   };
 
   const options = {
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
+      x: {
+        ticks: {
+          color: isDark ? "#e5e7eb" : "#374151", // gray-200 or gray-700
+        },
+        grid: {
+          color: isDark ? "#374151" : "#e5e7eb", // gray-700 or gray-200
+        },
+      },
       y: {
         beginAtZero: true,
         max: 50,
         ticks: {
+          color: isDark ? "#e5e7eb" : "#374151",
           callback: function (value) {
             return value.toLocaleString();
           },
         },
+        grid: {
+          color: isDark ? "#374151" : "#e5e7eb",
+        },
       },
     },
     plugins: {
+      legend: {
+        labels: {
+          color: isDark ? "#e5e7eb" : "#374151",
+        },
+      },
       title: {
         display: true,
         text: "Number of Bidders And Auctioneers Registered",
+        color: isDark ? "#e5e7eb" : "#111827", // white or gray-900
       },
     },
   };
 
-  return <Line data={data} options={options} />;
+  return (
+    <div className="relative h-[400px] w-full bg-white dark:bg-gray-900 rounded-md shadow-md p-4">
+      <Line data={data} options={options} />
+    </div>
+  );
 };
 
 export default BiddersAuctioneersGraph;

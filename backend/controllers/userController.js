@@ -3,6 +3,55 @@ import ErrorHandler from "../middlewares/error.js";
 import { User } from "../models/userSchema.js";
 import { v2 as cloudinary } from "cloudinary";
 import { generateToken } from "../utils/jwtToken.js";
+import fs from "fs";
+
+
+export const updateProfile = catchAsyncErrors(async (req, res, next) => {
+  const userId = req.user._id;
+  let updateData = { ...req.body };
+
+  if (req.files && req.files.profileImage) {
+    const user = await User.findById(userId);
+    if (user.profileImage && user.profileImage.public_id) {
+      await cloudinary.uploader.destroy(user.profileImage.public_id);
+    }
+    const result = await cloudinary.uploader.upload(
+      req.files.profileImage.tempFilePath,
+      { folder: "MERN_AUCTION_PLATFORM_USERS" }
+    );
+    updateData.profileImage = {
+      public_id: result.public_id,
+      url: result.secure_url,
+    };
+    fs.unlinkSync(req.files.profileImage.tempFilePath);
+  }
+
+  // Handle nested paymentMethods
+  updateData.paymentMethods = {
+    bankTransfer: {
+      bankAccountNumber: req.body.bankAccountNumber,
+      bankAccountName: req.body.bankAccountName,
+      bankName: req.body.bankName,
+    },
+    upi: {
+      upiId: req.body.upiId,
+    },
+    paypal: {
+      paypalEmail: req.body.paypalEmail,
+    },
+  };
+
+  // Remove fields that should not be updated directly
+  delete updateData.role;
+  delete updateData.email;
+
+  const user = await User.findByIdAndUpdate(userId, updateData, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({ success: true, user });
+});
 
 export const register = catchAsyncErrors(async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -26,7 +75,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     bankAccountNumber,
     bankAccountName,
     bankName,
-    easypaisaAccountNumber,
+    upiId,
     paypalEmail,
   } = req.body;
 
@@ -39,11 +88,10 @@ export const register = catchAsyncErrors(async (req, res, next) => {
         new ErrorHandler("Please provide your full bank details.", 400)
       );
     }
-    if (!easypaisaAccountNumber) {
-      return next(
-        new ErrorHandler("Please provide your easypaisa account number.", 400)
-      );
+    if (!upiId) {
+      return next(new ErrorHandler("Please provide your UPI ID.", 400));
     }
+
     if (!paypalEmail) {
       return next(new ErrorHandler("Please provide your paypal email.", 400));
     }
@@ -84,8 +132,8 @@ export const register = catchAsyncErrors(async (req, res, next) => {
         bankAccountName,
         bankName,
       },
-      easypaisa: {
-        easypaisaAccountNumber,
+      upi: {
+        upiId,
       },
       paypal: {
         paypalEmail,

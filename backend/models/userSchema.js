@@ -5,20 +5,32 @@ import jwt from "jsonwebtoken";
 const userSchema = new mongoose.Schema({
   userName: {
     type: String,
-    minLength: [3, "Username must caontain at least 3 characters."],
-    maxLength: [40, "Username cannot exceed 40 characters."],
+    required: [true, "Username is required."],
+    minLength: [3, "Username must be at least 3 characters."],
+    maxLength: [40, "Username must be under 40 characters."],
   },
   password: {
     type: String,
-    selected: false,
-    minLength: [8, "Password must caontain at least 8 characters."],
+    required: [true, "Password is required."],
+    select: false,
+    minLength: [8, "Password must be at least 8 characters."],
   },
-  email: String,
+  email: {
+    type: String,
+    required: [true, "Email is required."],
+    match: [
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      "Please enter a valid email address.",
+    ],
+  },
   address: String,
   phone: {
     type: String,
-    minLength: [11, "Phone Number must caontain exact 11 digits."],
-    maxLength: [11, "Phone Number must caontain exact 11 digits."],
+    required: [true, "Phone number is required."],
+    match: [
+      /^[6-9]\d{9}$/,
+      "Please enter a valid 10-digit phone number.",
+    ],
   },
   profileImage: {
     public_id: {
@@ -32,20 +44,36 @@ const userSchema = new mongoose.Schema({
   },
   paymentMethods: {
     bankTransfer: {
-      bankAccountNumber: String,
+      bankAccountNumber: {
+        type: String,
+        match: [/^\d{9,18}$/, "Enter a valid bank account number."],
+      },
       bankAccountName: String,
       bankName: String,
     },
-    easypaisa: {
-      easypaisaAccountNumber: Number,
+    upi: {
+      upiId: {
+        type: String,
+        match: [
+          /^[\w.\-_]{2,256}@[a-zA-Z]{2,64}$/,
+          "Enter a valid UPI ID (e.g., name@bank)",
+        ],
+      },
     },
     paypal: {
-      paypalEmail: String,
+      paypalEmail: {
+        type: String,
+        match: [
+          /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+          "Enter a valid PayPal email.",
+        ],
+      },
     },
   },
   role: {
     type: String,
     enum: ["Auctioneer", "Bidder", "Super Admin"],
+    required: true,
   },
   unpaidCommission: {
     type: Number,
@@ -66,9 +94,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    next();
-  }
+  if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
 });
 

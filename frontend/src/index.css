@@ -62,12 +62,14 @@
 
 @layer base {
   * {
+    box-sizing: border-box;
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
     background: linear-gradient(86deg, rgba(246, 244, 240), #f6f4f0);
     overflow-x: hidden;
+    overscroll-behavior: none;
     font-family: "Inter", sans-serif;
     font-optical-sizing: auto;
   }

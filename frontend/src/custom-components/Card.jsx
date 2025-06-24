@@ -33,7 +33,7 @@ const Card = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setTimeLeft(calculateTimeLeft());
-    });
+    }, 1000);
     return () => clearTimeout(timer);
   }, [timeLeft]);
 
@@ -43,41 +43,37 @@ const Card = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
   };
 
   return (
-    <>
-      <Link
-        to={`/auction/item/${id}`}
-        className="flex-grow basis-full bg-white rounded-md group sm:basis-56 lg:basis-60 2xl:basis-80"
-      >
-        <img
-          src={imgSrc}
-          alt={title}
-          className="w-full aspect-[4/3] m-auto md:p-12"
-        />
-        <div className="px-2 pt-4 pb-2">
-          <h5 className="font-semibold text-[18px] group-hover:text-[#d6482b] mb-2">
-            {title}
-          </h5>
-          {startingBid && (
-            <p className="text-stone-600 font-light">
-              Starting Bid:{" "}
-              <span className="text-[#fdba88] font-bold ml-1">
-                {startingBid}
-              </span>
-            </p>
-          )}
-          <p className="text-stone-600 font-light">
-            {timeLeft.type}
-            {Object.keys(timeLeft).length > 1 ? (
-              <span className="text-[#fdba88] font-bold ml-1">
-                {formatTimeLeft(timeLeft)}
-              </span>
-            ) : (
-              <span className="text-[#fdba88] font-bold ml-1">Time's up!</span>
-            )}
+    <Link
+      to={`/auction/item/${id}`}
+      className="flex-grow basis-full bg-white dark:bg-gray-800 rounded-md group sm:basis-56 lg:basis-60 2xl:basis-80 shadow-md dark:shadow-gray-700"
+    >
+      <img
+        src={imgSrc}
+        alt={title}
+        className="w-full aspect-[4/3] m-auto md:p-12 rounded-t-md object-cover"
+      />
+      <div className="px-2 pt-4 pb-2">
+        <h5 className="font-semibold text-[18px] group-hover:text-[#d6482b] dark:group-hover:text-[#ff6f61] mb-2 text-stone-900 dark:text-gray-100">
+          {title}
+        </h5>
+        {startingBid && (
+          <p className="text-stone-600 dark:text-stone-400 font-light">
+            Starting Bid:{" "}
+            <span className="text-[#fdba88] font-bold ml-1">{startingBid}</span>
           </p>
-        </div>
-      </Link>
-    </>
+        )}
+        <p className="text-stone-600 dark:text-stone-400 font-light">
+          {timeLeft.type}
+          {Object.keys(timeLeft).length > 1 ? (
+            <span className="text-[#fdba88] font-bold ml-1">
+              {formatTimeLeft(timeLeft)}
+            </span>
+          ) : (
+            <span className="text-[#fdba88] font-bold ml-1">Time's up!</span>
+          )}
+        </p>
+      </div>
+    </Link>
   );
 };
 

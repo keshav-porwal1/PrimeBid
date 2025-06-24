@@ -37,7 +37,7 @@ const CardTwo = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setTimeLeft(calculateTimeLeft());
-    });
+    }, 1000);
     return () => clearTimeout(timer);
   }, [timeLeft]);
 
@@ -55,43 +55,43 @@ const CardTwo = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
 
   return (
     <>
-      <div className="basis-full bg-white rounded-md group sm:basis-56 lg:basis-60 2xl:basis-80">
-        <img
-          src={imgSrc}
-          alt={title}
-          className="w-full aspect-[4/3] m-auto md:p-12"
-        />
+      <div className="basis-full bg-white dark:bg-gray-800 rounded-md group sm:basis-56 lg:basis-60 2xl:basis-80 shadow-md dark:shadow-gray-700">
+        <div className="w-full aspect-[4/3] m-auto md:p-12 rounded-t-md flex items-center justify-center bg-gray-100 dark:bg-gray-700">
+          <img
+            src={imgSrc}
+            alt={title}
+            className="max-w-full max-h-[300px] object-contain"
+          />
+        </div>
         <div className="px-2 pt-4 pb-2">
-          <h5 className="font-semibold text-[18px] group-hover:text-[#d6482b] mb-2">
+          <h5 className="font-semibold text-[18px] group-hover:text-[#d6482b] dark:group-hover:text-[#ff6f61] mb-2 text-stone-900 dark:text-gray-100">
             {title}
           </h5>
           {startingBid && (
-            <p className="text-stone-600 font-light">
+            <p className="text-stone-600 dark:text-stone-400 font-light">
               Starting Bid:{" "}
-              <span className="text-[#fdba88] font-bold ml-1">
-                {startingBid}
-              </span>
+              <span className="text-[#050505] dark:text-white font-bold ml-1">{startingBid}</span>
             </p>
           )}
-          <p className="text-stone-600 font-light">
+          <p className="text-stone-600 dark:text-stone-400 font-light">
             {timeLeft.type}
             {Object.keys(timeLeft).length > 1 ? (
-              <span className="text-[#fdba88] font-bold ml-1">
+              <span className="text-[#170d09] dark:text-white font-bold ml-1">
                 {formatTimeLeft(timeLeft)}
               </span>
             ) : (
-              <span className="text-[#fdba88] font-bold ml-1">Time's up!</span>
+              <span className="text-[#f3f2f2] font-bold ml-1">Time's up!</span>
             )}
           </p>
           <div className="flex flex-col gap-2 mt-4">
             <Link
-              className="bg-stone-700 text-center text-white text-xl px-4 py-2 rounded-md transition-all duration-300 hover:bg-black"
+              className="bg-stone-700 dark:bg-stone-700 text-center text-white text-xl px-4 py-2 rounded-md transition-all duration-300 hover:bg-black dark:hover:bg-gray-900"
               to={`/auction/details/${id}`}
             >
               View Auction
             </Link>
             <button
-              className="bg-red-400 text-center text-white text-xl px-4 py-2 rounded-md transition-all duration-300 hover:bg-red-600"
+              className="bg-red-400 dark:bg-red-400 text-center text-white text-xl px-4 py-2 rounded-md transition-all duration-300 hover:bg-red-600 dark:hover:bg-red-700"
               onClick={handleDeleteAuction}
             >
               Delete Auction
@@ -99,7 +99,7 @@ const CardTwo = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
             <button
               disabled={new Date(endTime) > Date.now()}
               onClick={() => setOpenDrawer(true)}
-              className="bg-sky-400 text-center text-white text-xl px-4 py-2 rounded-md transition-all duration-300 hover:bg-sky-700"
+              className="bg-sky-400 dark:bg-sky-400 text-center text-white text-xl px-4 py-2 rounded-md transition-all duration-300 hover:bg-sky-700 dark:hover:bg-sky-800 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Republish Auction
             </button>
@@ -115,10 +115,11 @@ export default CardTwo;
 
 const Drawer = ({ setOpenDrawer, openDrawer, id }) => {
   const dispatch = useDispatch();
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const {loading} = useSelector(state => state.auction);
-  const handleRepbulishAuction = () => {
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+  const { loading } = useSelector((state) => state.auction);
+
+  const handleRepublishAuction = () => {
     const formData = new FormData();
     formData.append("startTime", startTime);
     formData.append("endTime", endTime);
@@ -129,20 +130,20 @@ const Drawer = ({ setOpenDrawer, openDrawer, id }) => {
     <section
       className={`fixed ${
         openDrawer && id ? "bottom-0" : "-bottom-full"
-      }  left-0 w-full transition-all duration-300 h-full bg-[#00000087] flex items-end`}
+      } left-0 w-full transition-all duration-300 h-full bg-[#00000087] flex items-end`}
     >
-      <div className="bg-white h-fit transition-all duration-300 w-full">
+      <div className="bg-white dark:bg-gray-900 h-fit transition-all duration-300 w-full">
         <div className="w-full px-5 py-8 sm:max-w-[640px] sm:m-auto">
-          <h3 className="text-[#D6482B]  text-3xl font-semibold text-center mb-1">
+          <h3 className="text-[#D6482B] text-3xl font-semibold text-center mb-1">
             Republish Auction
           </h3>
-          <p className="text-stone-600">
+          <p className="text-stone-600 dark:text-stone-400">
             Let's republish auction with same details but new starting and
             ending time.
           </p>
           <form className="flex flex-col gap-5 my-5">
             <div className="flex flex-col gap-3">
-              <label className="text-[16px] text-stone-600">
+              <label className="text-[16px] text-stone-600 dark:text-stone-400">
                 Republish Auction Start Time
               </label>
               <DatePicker
@@ -151,12 +152,12 @@ const Drawer = ({ setOpenDrawer, openDrawer, id }) => {
                 showTimeSelect
                 timeFormat="HH:mm"
                 timeIntervals={15}
-                dateFormat={"MMMM d, yyyy h,mm aa"}
-                className="text-[16px] py-2 bg-transparent border-b-[1px] border-b-stone-500 focus:outline-none w-full"
+                dateFormat={"MMMM d, yyyy h:mm aa"}
+                className="text-[16px] py-2 bg-transparent border-b-[1px] border-b-stone-500 dark:border-b-stone-400 focus:outline-none w-full text-stone-900 dark:text-gray-100"
               />
             </div>
             <div className="flex flex-col gap-3">
-              <label className="text-[16px] text-stone-600">
+              <label className="text-[16px] text-stone-600 dark:text-stone-400">
                 Republish Auction End Time
               </label>
               <DatePicker
@@ -165,23 +166,24 @@ const Drawer = ({ setOpenDrawer, openDrawer, id }) => {
                 showTimeSelect
                 timeFormat="HH:mm"
                 timeIntervals={15}
-                dateFormat={"MMMM d, yyyy h,mm aa"}
-                className="text-[16px] py-2 bg-transparent border-b-[1px] border-b-stone-500 focus:outline-none w-full"
+                dateFormat={"MMMM d, yyyy h:mm aa"}
+                className="text-[16px] py-2 bg-transparent border-b-[1px] border-b-stone-500 dark:border-b-stone-400 focus:outline-none w-full text-stone-900 dark:text-gray-100"
               />
             </div>
             <div>
               <button
                 type="button"
-                className="bg-blue-500 flex justify-center w-full py-2 rounded-md text-white font-semibold text-xl transition-all duration-300 hover:bg-blue-700"
-                onClick={handleRepbulishAuction}
+                className="bg-blue-500 dark:bg-blue-700 flex justify-center w-full py-2 rounded-md text-white font-semibold text-xl transition-all duration-300 hover:bg-blue-700 dark:hover:bg-blue-900"
+                onClick={handleRepublishAuction}
+                disabled={!startTime || !endTime || loading}
               >
-                {loading ? "Republishing" : "Republish"} 
+                {loading ? "Republishing" : "Republish"}
               </button>
             </div>
             <div>
               <button
                 type="button"
-                className="bg-yellow-500 flex justify-center w-full py-2 rounded-md text-white font-semibold text-xl transition-all duration-300 hover:bg-yellow-700"
+                className="bg-yellow-500 dark:bg-yellow-600 flex justify-center w-full py-2 rounded-md text-white font-semibold text-xl transition-all duration-300 hover:bg-yellow-700 dark:hover:bg-yellow-800"
                 onClick={() => setOpenDrawer(false)}
               >
                 Cancel

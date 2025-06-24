@@ -57,6 +57,22 @@ const userSlice = createSlice({
       state.user = {};
     },
 
+    // --- Added for profile update ---
+    updateProfileRequest(state) {
+      state.loading = true;
+    },
+    updateProfileSuccess(state, action) {
+      state.loading = false;
+      state.isAuthenticated = true;
+      state.user = action.payload;
+      toast.success("Profile updated successfully!");
+    },
+    updateProfileFailed(state) {
+      state.loading = false;
+      toast.error("Profile update failed!");
+    },
+    // --- End profile update ---
+
     logoutSuccess(state, action) {
       state.isAuthenticated = false;
       state.user = {};
@@ -177,6 +193,29 @@ export const fetchLeaderboard = () => async (dispatch) => {
     dispatch(userSlice.actions.fetchLeaderboardFailed());
     dispatch(userSlice.actions.clearAllErrors());
     console.error(error);
+  }
+};
+
+// --- Add updateProfile thunk ---
+export const updateProfile = (formData) => async (dispatch) => {
+  dispatch(userSlice.actions.updateProfileRequest());
+  try {
+    const response = await axios.put(
+      "http://localhost:5000/api/v1/user/me/update",
+      formData,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+    dispatch(userSlice.actions.updateProfileSuccess(response.data.user));
+    dispatch(userSlice.actions.clearAllErrors());
+  } catch (error) {
+    dispatch(userSlice.actions.updateProfileFailed());
+    toast.error(
+      error.response?.data?.message || "Profile update failed!"
+    );
+    dispatch(userSlice.actions.clearAllErrors());
   }
 };
 
